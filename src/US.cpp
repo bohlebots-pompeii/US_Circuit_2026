@@ -5,7 +5,6 @@
 #include "US.h"
 #include "config.h"
 #include "Kalman1D.h"
-#include "Median3.h"
 #include <Arduino.h>
 #include <array>
 #include <cmath>
