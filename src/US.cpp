@@ -127,11 +127,14 @@ void US_Sensor::update() {
     const auto data = getData();
     const auto pos = calculatePosition(data);
 
+    /*
     const float raw_x = pos[0];
     const float raw_y = pos[1];
 
+
     x_pos = kx.update(raw_x);
     y_pos = ky.update(raw_y);
+    */
 
     x_pos = pos[0];
     y_pos = pos[1];

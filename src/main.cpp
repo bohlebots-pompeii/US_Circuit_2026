@@ -8,6 +8,9 @@ US_Sensor us;
 #define I2C_ADDR 0x50
 #define SCALE 1000.0f // mm
 
+volatile int16_t cached_xi = 0;
+volatile int16_t cached_yi = 0;
+
 void writeInt16LE(const int16_t v) {
   uint8_t b[2];
   b[0] = v & 0xFF;
@@ -16,11 +19,8 @@ void writeInt16LE(const int16_t v) {
 }
 
 void onRequest() {
-  const auto xi = static_cast<int16_t>(US_Sensor::x_pos * SCALE);
-  const auto yi = static_cast<int16_t>(US_Sensor::y_pos * SCALE);
-
-  writeInt16LE(xi);
-  writeInt16LE(yi);
+  writeInt16LE(cached_xi);
+  writeInt16LE(cached_yi);
 }
 
 void onReceive(int numBytes) {
@@ -45,5 +45,14 @@ void setup() {
 
 void loop() {
   US_Sensor::update();
+
+  cli();
+  cached_xi = static_cast<int16_t>(US_Sensor::x_pos * SCALE);
+  cached_yi = static_cast<int16_t>(US_Sensor::y_pos * SCALE);
+  sei();
+
+  Serial.print(US_Sensor::x_pos);
+  Serial.print(", ");
+  Serial.println(US_Sensor::y_pos);
   delay(sensorDelay);
 }
